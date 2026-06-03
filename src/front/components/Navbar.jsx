@@ -1,19 +1,31 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import useGlobalReducer from "../hooks/useGlobalReducer";
 
 export const Navbar = () => {
+  const { store, dispatch } = useGlobalReducer();
+  const navigate = useNavigate();
 
-	return (
-		<nav className="navbar navbar-light bg-light">
-			<div className="container">
-				<Link to="/">
-					<span className="navbar-brand mb-0 h1">React Boilerplate</span>
-				</Link>
-				<div className="ml-auto">
-					<Link to="/demo">
-						<button className="btn btn-primary">Check the Context in action</button>
-					</Link>
-				</div>
-			</div>
-		</nav>
-	);
+  const handleLogout = () => {
+    dispatch({ type: "logout" });
+    navigate("/login");
+  };
+
+  return (
+    <nav className="navbar navbar-light bg-light px-4">
+      <Link className="navbar-brand" to="/">My App</Link>
+      <div className="d-flex gap-3">
+        {store.token ? (
+          <>
+            <Link className="btn btn-outline-secondary" to="/private">Private</Link>
+            <button className="btn btn-outline-danger" onClick={handleLogout}>Logout</button>
+          </>
+        ) : (
+          <>
+            <Link className="btn btn-outline-primary" to="/login">Login</Link>
+            <Link className="btn btn-primary" to="/signup">Signup</Link>
+          </>
+        )}
+      </div>
+    </nav>
+  );
 };
